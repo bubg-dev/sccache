@@ -1900,9 +1900,8 @@ checksum = "3fdb12b2476b595f9358c5161aa467c2438859caa136dec86c26fdd2efe17b92"
 
 [[package]]
 name = "opendal"
-version = "0.55.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d075ab8a203a6ab4bc1bce0a4b9fe486a72bf8b939037f4b78d95386384bc80a"
+version = "0.55.1"
+source = "git+https://github.com/bubg-dev/opendal.git?tag=v0.55.1#80179bda69f09fc9d6b02c8acfc471bef2c1f817"
 dependencies = [
  "anyhow",
  "backon",
@@ -2885,7 +2884,7 @@ dependencies = [
 
 [[package]]
 name = "sccache"
-version = "0.15.0"
+version = "0.15.1"
 dependencies = [
  "anyhow",
  "ar",

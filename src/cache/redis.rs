@@ -64,7 +64,13 @@ impl RedisCache {
     ) -> Result<Operator> {
         let builder = Redis::default().endpoint(endpoint);
 
-        Self::build_common(builder, username, password, db, key_prefix, ttl)
+        let insecure = Url::parse(endpoint)
+            .ok()
+            .and_then(|u| u.fragment().map(str::to_owned))
+            .unwrap_or_default()
+            == "insecure";
+
+        Self::build_common(builder, username, password, db, key_prefix, ttl, insecure)
     }
 
     /// Create a new `RedisCache` for the given cluster.
@@ -77,8 +83,7 @@ impl RedisCache {
         ttl: u64,
     ) -> Result<Operator> {
         let builder = Redis::default().cluster_endpoints(endpoints);
-
-        Self::build_common(builder, username, password, db, key_prefix, ttl)
+        Self::build_common(builder, username, password, db, key_prefix, ttl, false)
     }
 
     fn build_common(
@@ -88,12 +93,14 @@ impl RedisCache {
         db: u32,
         key_prefix: &str,
         ttl: u64,
+        insecure: bool,
     ) -> Result<Operator> {
         builder = builder
             .username(username.unwrap_or_default())
             .password(password.unwrap_or_default())
             .db(db.into())
-            .root(key_prefix);
+            .root(key_prefix)
+            .insecure(insecure);
         if ttl != 0 {
             builder = builder.default_ttl(Duration::from_secs(ttl));
         }
